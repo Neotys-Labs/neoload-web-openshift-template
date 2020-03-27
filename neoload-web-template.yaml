@@ -1,0 +1,291 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: nlweb-onprem
+parameters:
+  - name: NLW_VERSION
+    description: "NeoLoad Web version, it must be a docker image tag from https://hub.docker.com/repository/docker/neotys/neoload-web-backend/tags?page=1"
+    value: "latest"
+  - name: MONGODB_URL
+    description: "URL of you Mongo DB server or cluster. Expected format is: <host>:<port>/<auth database>?<parameters> example 'mongo.mycompany.com:27017/admin?ssl=true'"
+    required: true
+  - name: MONGODB_LOGIN
+    description: "User login used to authenticate on Mongo DB. Leave it empty if no authentication is required."
+  - name: MONGODB_PASSWORD
+    description: "User password used to authenticate on Mongo DB. Leave it empty if no authentication is required."
+  - name: SECRET_KEY
+    description: "Passphrase used to encrypt and store sensitive data used in NeoLoad Web (like git passwords). Must be 8 characters minimum."
+    required: true
+  - name: OPENSHIFT_ROUTE_HOSTNAME
+    description: "Base hostname used by Openshift route, like myopenshift.mycompany.com."
+    required: true
+objects:
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      name: neoload-web
+      labels:
+        app: neoload-web
+    spec:
+      replicas: 1
+      selector:
+        name: neoload-web
+      template:
+        metadata:
+          labels:
+            name: neoload-web
+        spec:
+          containers:
+            - name: neoload-web-backend
+              image: neotys/neoload-web-backend:${NLW_VERSION}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 1081
+                  protocol: TCP
+                - containerPort: 1082
+                  protocol: TCP
+                - containerPort: 9092
+                  protocol: TCP
+              resources:
+                limits:
+                  memory: 3Gi
+                  cpu: 2
+                requests:
+                  memory: 2Gi
+                  cpu: 1
+              env:
+                - name: MONGODB_HOST
+                  value: "${MONGODB_URL}"
+                - name: MONGODB_PORT
+                  value: "0"
+                - name: MONGODB_MAX_POOLSIZE
+                  value: "50"
+                - name: CLUSTER_GROUP
+                  value: "cluster-neoload-web"
+                - name: SEND_USAGE_STATISTICS
+                  value: "true"
+                - name: MEMORY_MAX
+                  value: "2000m"
+                - name: OPENSHIFT_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.namespace
+                - name: NEOLOAD_WEB_PUBLIC_URL
+                  value: "http://neoload-front-$(OPENSHIFT_NAMESPACE).${OPENSHIFT_ROUTE_HOSTNAME}"
+                - name: NEOLOAD_WEB_API_PUBLIC_URL
+                  value: "http://neoload-api-$(OPENSHIFT_NAMESPACE).${OPENSHIFT_ROUTE_HOSTNAME}"
+                - name: FILE_STORAGE_ROUTER_BASE_URL
+                  value: "http://neoload-files-$(OPENSHIFT_NAMESPACE).${OPENSHIFT_ROUTE_HOSTNAME}"
+                - name: FILE_PROJECT_MAX_SIZE_IN_BYTES
+                  value: "250000000"
+                - name: NLPROJECT_MAX_UPLOADED_FILES_PER_WEEK
+                  value: "250"
+                - name: NLWEB_SECRET_KEY
+                  value: "${SECRET_KEY}"
+                - name: DEPLOYMENT_TYPE
+                  value: "openshift"
+              livenessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 90
+                periodSeconds: 5
+                successThreshold: 1
+                tcpSocket:
+                  port: 1081
+                timeoutSeconds: 1
+              readinessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 90
+                periodSeconds: 5
+                successThreshold: 1
+                tcpSocket:
+                  port: 1081
+                timeoutSeconds: 1
+            - name: neoload-web-frontend
+              image: neotys/neoload-web-frontend:${NLW_VERSION}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 9090
+                  protocol: TCP
+                - containerPort: 9091
+                  protocol: TCP
+              resources:
+                limits:
+                  memory: 2Gi
+                  cpu: 2
+                requests:
+                  memory: 1Gi
+                  cpu: 1
+              env:
+                - name: CLUSTER_GROUP
+                  value: "cluster-neoload-web"
+                - name: MEMORY_MAX
+                  value: "1000m"
+                - name: DEPLOYMENT_TYPE
+                  value: "openshift"
+              livenessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 90
+                periodSeconds: 5
+                successThreshold: 1
+                tcpSocket:
+                  port: 9090
+                timeoutSeconds: 1
+              readinessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 90
+                periodSeconds: 5
+                successThreshold: 1
+                tcpSocket:
+                  port: 9090
+                timeoutSeconds: 1
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: neoload-api-svc
+      labels:
+        name: neoload-api-svc
+        app: neoload-web
+    spec:
+      type: NodePort
+      ports:
+        - port: 1081
+          targetPort: 1081
+          name: neoload-web
+      selector:
+        name: neoload-web
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: "true"
+        haproxy.router.openshift.io/timeout: "2000s"
+      name: neoload-api
+      labels:
+        app: neoload-web
+    spec:
+      to:
+        kind: Service
+        name: neoload-api-svc
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: neoload-files-svc
+      labels:
+        name: neoload-files-svc
+        app: neoload-web
+    spec:
+      type: NodePort
+      ports:
+        - port: 1082
+          targetPort: 1082
+          name: neoload-web
+      selector:
+        name: neoload-web
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: "true"
+        haproxy.router.openshift.io/timeout: "2000s"
+      name: neoload-files
+      labels:
+        app: neoload-web
+    spec:
+      to:
+        kind: Service
+        name: neoload-files-svc
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: neoload-front-svc
+      labels:
+        name: neoload-front-svc
+        app: neoload-web
+    spec:
+      type: NodePort
+      ports:
+        - port: 9090
+          targetPort: 9090
+          name: neoload-web
+      selector:
+        name: neoload-web
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: "true"
+        haproxy.router.openshift.io/timeout: "2000s"
+      name: neoload-front
+      labels:
+        app: neoload-web
+    spec:
+      to:
+        kind: Service
+        name: neoload-front-svc
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: neoload-front-admin-svc
+      labels:
+        name: neoload-front-admin-svc
+        app: neoload-web
+    spec:
+      type: NodePort
+      ports:
+        - port: 9091
+          targetPort: 9091
+          name: neoload-web
+      selector:
+        name: neoload-web
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: "true"
+        haproxy.router.openshift.io/timeout: "2000s"
+      name: neoload-front-admin
+      labels:
+        app: neoload-web
+    spec:
+      to:
+        kind: Service
+        name: neoload-front-admin-svc
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: neoload-back-admin-svc
+      labels:
+        name: neoload-back-admin-svc
+        app: neoload-web
+    spec:
+      type: NodePort
+      ports:
+        - port: 9092
+          targetPort: 9092
+          name: neoload-web
+      selector:
+        name: neoload-web
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: "true"
+        haproxy.router.openshift.io/timeout: "2000s"
+      name: neoload-back-admin
+      labels:
+        app: neoload-web
+    spec:
+      to:
+        kind: Service
+        name: neoload-back-admin-svc
+        weight: 100
+      wildcardPolicy: None
