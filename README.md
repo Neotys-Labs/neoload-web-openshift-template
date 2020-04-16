@@ -142,7 +142,7 @@ This pod contains 2 containers respectively named *neoload-web-frontend* and *ne
 You can get logs from each container by running the following command `oc logs <pod-name> -c <container-name>`.
 #### Output examples
 ##### NeoLoad Web Frontend logs
-```shell
+```
 user@host:~$ oc logs neoload-web-1-chkvs -c neoload-web-frontend
 Starting mode START_MODE=ON_PREMISE
 Starting Jetty on port 9090
@@ -173,7 +173,7 @@ Vertx IP Bus Address: 10.131.1.25 public host 10.131.1.25
 ....
 ```
 ##### NeoLoad Web Backend logs
-```shell
+```
 user@host:~$ oc logs neoload-web-1-chkvs -c neoload-web-backend
 Starting mode START_MODE=ON_PREMISE
 Starting Jetty on port 9092
