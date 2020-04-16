@@ -92,17 +92,17 @@ You can check the deployment progress by using the following command line `oc ge
 #### Output example
 ```shell
 user@host:~$ oc get pods --watch
-NAME                   READY   STATUS    					RESTARTS  AGE
-neoload-web-1-deploy   0/1     Pending   					0         0s
-neoload-web-1-deploy   0/1     Pending   					0     		0s
+NAME                   READY   STATUS             RESTARTS  AGE
+neoload-web-1-deploy   0/1     Pending            0         0s
+neoload-web-1-deploy   0/1     Pending            0     		0s
 neoload-web-1-deploy   0/1     ContainerCreating  0					0s
-neoload-web-1-deploy   1/1     Running   					0     		4s
-neoload-web-1-gxb4r    0/2     Pending   					0     		0s
-neoload-web-1-gxb4r    0/2     Pending   					0     		0s
+neoload-web-1-deploy   1/1     Running            0     		4s
+neoload-web-1-gxb4r    0/2     Pending            0     		0s
+neoload-web-1-gxb4r    0/2     Pending            0     		0s
 neoload-web-1-gxb4r    0/2     ContainerCreating  0					0s
-neoload-web-1-gxb4r    0/2     Running   					0     		6s
-neoload-web-1-gxb4r    1/2     Running   					0     		96s
-neoload-web-1-gxb4r    2/2     Running   					0     		98s
+neoload-web-1-gxb4r    0/2     Running            0     		6s
+neoload-web-1-gxb4r    1/2     Running            0     		96s
+neoload-web-1-gxb4r    2/2     Running            0     		98s
 ```
 This command line will watch Pods startup and status changes. NeoLoad Web is started when the last line (`neoload-web-1-gxb4r   2/2   Running   0     98s`) appears.
 
@@ -311,9 +311,9 @@ user@host:~$ oc get events
 LAST SEEN   FIRST SEEN   COUNT     NAME                                    KIND                   SUBOBJECT                     TYPE      REASON              SOURCE                                        MESSAGE
 3s          3s           1         neoload-web-1-deploy.1603cee243d39112   Pod                                                  Normal    Scheduled           default-scheduler                             Successfully assigned my-workspace/neoload-web-1-deploy to openshift.mycompany.com
 3s          3s           1         neoload-web.1603cee23c2c6eea            DeploymentConfig                                     Normal    DeploymentCreated   deploymentconfig-controller                   Created new replication controller "neoload-web-1" for version 1
-0s          0s           1         neoload-web-1-deploy.1603cee32275da51   Pod                    spec.containers{deployment}   Normal    Pulled              kubelet, openshift.mycompany.com 							Container image "docker.io/openshift/origin-deployer:v3.11.0" already present on machine
-0s          0s           1         neoload-web-1-deploy.1603cee359360499   Pod                    spec.containers{deployment}   Normal    Created             kubelet, openshift.mycompany.com							Created container
-0s          0s           1         neoload-web-1-deploy.1603cee376df0c15   Pod                    spec.containers{deployment}   Normal    Started             kubelet, openshift.mycompany.com							Started container
+0s          0s           1         neoload-web-1-deploy.1603cee32275da51   Pod                    spec.containers{deployment}   Normal    Pulled              kubelet, openshift.mycompany.com              Container image "docker.io/openshift/origin-deployer:v3.11.0" already present on machine
+0s          0s           1         neoload-web-1-deploy.1603cee359360499   Pod                    spec.containers{deployment}   Normal    Created             kubelet, openshift.mycompany.com              Created container
+0s          0s           1         neoload-web-1-deploy.1603cee376df0c15   Pod                    spec.containers{deployment}   Normal    Started             kubelet, openshift.mycompany.com              Started container
 0s          0s           1         neoload-web-1.1603cee390a2d2bc          ReplicationController                                Warning   FailedCreate        replication-controller                        Error creating: pods "neoload-web-1-zkkj7" is forbidden: maximum memory usage per Pod is 1Gi, but limit is 5368709120.
 0s          0s           1         neoload-web-1.1603cee3945cf7d0          ReplicationController                                Warning   FailedCreate        replication-controller                        Error creating: pods "neoload-web-1-9qr9f" is forbidden: maximum memory usage per Pod is 1Gi, but limit is 5368709120.
 0s          0s           1         neoload-web-1.1603cee39508bf39          ReplicationController                                Warning   FailedCreate        replication-controller                        Error creating: pods "neoload-web-1-6rzzk" is forbidden: maximum memory usage per Pod is 1Gi, but limit is 5368709120.
