@@ -91,17 +91,17 @@ You can check the deployment progress by using the following command line `oc ge
 #### Output example
 ```shell
 user@host:~$ oc get pods --watch
-NAME                   READY   STATUS    RESTARTS   AGE
-neoload-web-1-deploy   0/1     Pending   0          0s
-neoload-web-1-deploy   0/1   Pending   0     0s
-neoload-web-1-deploy   0/1   ContainerCreating   0     0s
-neoload-web-1-deploy   1/1   Running   0     4s
-neoload-web-1-gxb4r   0/2   Pending   0     0s
-neoload-web-1-gxb4r   0/2   Pending   0     0s
-neoload-web-1-gxb4r   0/2   ContainerCreating   0     0s
-neoload-web-1-gxb4r   0/2   Running   0     6s
-neoload-web-1-gxb4r   1/2   Running   0     96s
-neoload-web-1-gxb4r   2/2   Running   0     98s
+NAME                   READY   STATUS    					RESTARTS   	AGE
+neoload-web-1-deploy   0/1     Pending   					0          	0s
+neoload-web-1-deploy   0/1   	 Pending   					0     			0s
+neoload-web-1-deploy   0/1   	 ContainerCreating  0     			0s
+neoload-web-1-deploy   1/1   	 Running   					0     			4s
+neoload-web-1-gxb4r    0/2   	 Pending   					0     			0s
+neoload-web-1-gxb4r    0/2   	 Pending   					0     			0s
+neoload-web-1-gxb4r    0/2   	 ContainerCreating  0     			0s
+neoload-web-1-gxb4r    0/2   	 Running   					0     			6s
+neoload-web-1-gxb4r    1/2   	 Running   					0     			96s
+neoload-web-1-gxb4r    2/2   	 Running   					0     			98s
 ```
 This command line will watch Pods startup and status changes. NeoLoad Web is started when the last line (`neoload-web-1-gxb4r   2/2   Running   0     98s`) appears.
 
@@ -115,11 +115,11 @@ You can get the created Routes by running the following command `oc get routes`.
 ```shell
 user@host:~$ oc get routes
 NAME                  HOST/PORT                                                     PATH      SERVICES                  PORT      TERMINATION   WILDCARD
-neoload-api           neoload-api-my-workspace.openshift.mycompany.com                     neoload-api-svc           <all>                   None
-neoload-back-admin    neoload-back-admin-my-workspace.openshift.mycompany.com              neoload-back-admin-svc    <all>                   None
-neoload-files         neoload-files-my-workspace.openshift.mycompany.com                   neoload-files-svc         <all>                   None
-neoload-front         neoload-front-my-workspace.openshift.mycompany.com                   neoload-front-svc         <all>                   None
-neoload-front-admin   neoload-front-admin-my-workspace.openshift.mycompany.com             neoload-front-admin-svc   <all>                   None
+neoload-api           neoload-api-my-workspace.openshift.mycompany.com                     		neoload-api-svc           <all>                   None
+neoload-back-admin    neoload-back-admin-my-workspace.openshift.mycompany.com              		neoload-back-admin-svc    <all>                   None
+neoload-files         neoload-files-my-workspace.openshift.mycompany.com                   		neoload-files-svc         <all>                   None
+neoload-front         neoload-front-my-workspace.openshift.mycompany.com                   		neoload-front-svc         <all>                   None
+neoload-front-admin   neoload-front-admin-my-workspace.openshift.mycompany.com             		neoload-front-admin-svc   <all>                   None
 
 ```
 * neoload-api -> neoload-api-my-workspace.openshift.mycompany.com
