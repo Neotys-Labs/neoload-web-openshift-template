@@ -1,4 +1,5 @@
 
+
 # NeoLoad Web OpenShift template
 
 This repository contains assets and documentation that will help you to deploy NeoLoad Web on an OpenShift cluster.
@@ -93,15 +94,15 @@ You can check the deployment progress by using the following command line `oc ge
 user@host:~$ oc get pods --watch
 NAME                   READY   STATUS    					RESTARTS   	AGE
 neoload-web-1-deploy   0/1     Pending   					0          	0s
-neoload-web-1-deploy   0/1   	 Pending   					0     			0s
-neoload-web-1-deploy   0/1   	 ContainerCreating  0     			0s
-neoload-web-1-deploy   1/1   	 Running   					0     			4s
-neoload-web-1-gxb4r    0/2   	 Pending   					0     			0s
-neoload-web-1-gxb4r    0/2   	 Pending   					0     			0s
-neoload-web-1-gxb4r    0/2   	 ContainerCreating  0     			0s
-neoload-web-1-gxb4r    0/2   	 Running   					0     			6s
-neoload-web-1-gxb4r    1/2   	 Running   					0     			96s
-neoload-web-1-gxb4r    2/2   	 Running   					0     			98s
+neoload-web-1-deploy   0/1     Pending   					0     		0s
+neoload-web-1-deploy   0/1     ContainerCreating  			0			0s
+neoload-web-1-deploy   1/1     Running   					0     		4s
+neoload-web-1-gxb4r    0/2     Pending   					0     		0s
+neoload-web-1-gxb4r    0/2     Pending   					0     		0s
+neoload-web-1-gxb4r    0/2     ContainerCreating  			0			0s
+neoload-web-1-gxb4r    0/2     Running   					0     		6s
+neoload-web-1-gxb4r    1/2     Running   					0     		96s
+neoload-web-1-gxb4r    2/2     Running   					0     		98s
 ```
 This command line will watch Pods startup and status changes. NeoLoad Web is started when the last line (`neoload-web-1-gxb4r   2/2   Running   0     98s`) appears.
 
@@ -115,11 +116,11 @@ You can get the created Routes by running the following command `oc get routes`.
 ```shell
 user@host:~$ oc get routes
 NAME                  HOST/PORT                                                     PATH      SERVICES                  PORT      TERMINATION   WILDCARD
-neoload-api           neoload-api-my-workspace.openshift.mycompany.com                     		neoload-api-svc           <all>                   None
-neoload-back-admin    neoload-back-admin-my-workspace.openshift.mycompany.com              		neoload-back-admin-svc    <all>                   None
-neoload-files         neoload-files-my-workspace.openshift.mycompany.com                   		neoload-files-svc         <all>                   None
-neoload-front         neoload-front-my-workspace.openshift.mycompany.com                   		neoload-front-svc         <all>                   None
-neoload-front-admin   neoload-front-admin-my-workspace.openshift.mycompany.com             		neoload-front-admin-svc   <all>                   None
+neoload-api           neoload-api-my-workspace.openshift.mycompany.com                     	  neoload-api-svc           <all>                   None
+neoload-back-admin    neoload-back-admin-my-workspace.openshift.mycompany.com              	  neoload-back-admin-svc    <all>                   None
+neoload-files         neoload-files-my-workspace.openshift.mycompany.com                   	  neoload-files-svc         <all>                   None
+neoload-front         neoload-front-my-workspace.openshift.mycompany.com                   	  neoload-front-svc         <all>                   None
+neoload-front-admin   neoload-front-admin-my-workspace.openshift.mycompany.com             	  neoload-front-admin-svc   <all>                   None
 
 ```
 * neoload-api -> neoload-api-my-workspace.openshift.mycompany.com
@@ -310,9 +311,9 @@ user@host:~$ oc get events
 LAST SEEN   FIRST SEEN   COUNT     NAME                                    KIND                   SUBOBJECT                     TYPE      REASON              SOURCE                                        MESSAGE
 3s          3s           1         neoload-web-1-deploy.1603cee243d39112   Pod                                                  Normal    Scheduled           default-scheduler                             Successfully assigned my-workspace/neoload-web-1-deploy to openshift.mycompany.com
 3s          3s           1         neoload-web.1603cee23c2c6eea            DeploymentConfig                                     Normal    DeploymentCreated   deploymentconfig-controller                   Created new replication controller "neoload-web-1" for version 1
-0s          0s           1         neoload-web-1-deploy.1603cee32275da51   Pod                    spec.containers{deployment}   Normal    Pulled              kubelet, openshift.mycompany.com    Container image "docker.io/openshift/origin-deployer:v3.11.0" already present on machine
-0s          0s           1         neoload-web-1-deploy.1603cee359360499   Pod                    spec.containers{deployment}   Normal    Created             kubelet, openshift.mycompany.com    Created container
-0s          0s           1         neoload-web-1-deploy.1603cee376df0c15   Pod                    spec.containers{deployment}   Normal    Started             kubelet, openshift.mycompany.com    Started container
+0s          0s           1         neoload-web-1-deploy.1603cee32275da51   Pod                    spec.containers{deployment}   Normal    Pulled              kubelet, openshift.mycompany.com    			Container image "docker.io/openshift/origin-deployer:v3.11.0" already present on machine
+0s          0s           1         neoload-web-1-deploy.1603cee359360499   Pod                    spec.containers{deployment}   Normal    Created             kubelet, openshift.mycompany.com    			Created container
+0s          0s           1         neoload-web-1-deploy.1603cee376df0c15   Pod                    spec.containers{deployment}   Normal    Started             kubelet, openshift.mycompany.com    			Started container
 0s          0s           1         neoload-web-1.1603cee390a2d2bc          ReplicationController                                Warning   FailedCreate        replication-controller                        Error creating: pods "neoload-web-1-zkkj7" is forbidden: maximum memory usage per Pod is 1Gi, but limit is 5368709120.
 0s          0s           1         neoload-web-1.1603cee3945cf7d0          ReplicationController                                Warning   FailedCreate        replication-controller                        Error creating: pods "neoload-web-1-9qr9f" is forbidden: maximum memory usage per Pod is 1Gi, but limit is 5368709120.
 0s          0s           1         neoload-web-1.1603cee39508bf39          ReplicationController                                Warning   FailedCreate        replication-controller                        Error creating: pods "neoload-web-1-6rzzk" is forbidden: maximum memory usage per Pod is 1Gi, but limit is 5368709120.
@@ -374,9 +375,9 @@ user@host:~$ oc get events
 LAST SEEN   FIRST SEEN   COUNT     NAME                                    KIND                    SUBOBJECT                               TYPE      REASON              SOURCE                                       MESSAGE
 34s         34s          1         neoload-web-1-deploy.160417a5435e1f31   Pod                                                             Normal    Scheduled           default-scheduler                            Successfully assigned my-workspace/neoload-web-1-deploy to openshift.mycompany.com
 34s         34s          1         neoload-web.160417a53eb01264            DeploymentConfig                                                Normal    DeploymentCreated   deploymentconfig-controller                  Created new replication controller "neoload-web-1" for version 1
-31s         31s          1         neoload-web-1-deploy.160417a60d0b1e1d   Pod                     spec.containers{deployment}             Normal    Pulled              kubelet, openshift.mycompany.com   Container image "docker.io/openshift/origin-deployer:v3.11.0" already present on machine
-30s         30s          1         neoload-web-1-deploy.160417a631d0a1c7   Pod                     spec.containers{deployment}             Normal    Created             kubelet, openshift.mycompany.com   Created container
-30s         30s          1         neoload-web-1-deploy.160417a646413a2c   Pod                     spec.containers{deployment}             Normal    Started             kubelet, openshift.mycompany.com   Started container
+31s         31s          1         neoload-web-1-deploy.160417a60d0b1e1d   Pod                     spec.containers{deployment}             Normal    Pulled              kubelet, openshift.mycompany.com   		  Container image "docker.io/openshift/origin-deployer:v3.11.0" already present on machine
+30s         30s          1         neoload-web-1-deploy.160417a631d0a1c7   Pod                     spec.containers{deployment}             Normal    Created             kubelet, openshift.mycompany.com   		  Created container
+30s         30s          1         neoload-web-1-deploy.160417a646413a2c   Pod                     spec.containers{deployment}             Normal    Started             kubelet, openshift.mycompany.com   		  Started container
 26s         26s          1         neoload-web-1.160417a737d4e30d          ReplicationController                                           Normal    SuccessfulCreate    replication-controller                       Created pod: neoload-web-1-p9lbt
 26s         26s          1         neoload-web-1-p9lbt.160417a73b588731    Pod                                                             Normal    Scheduled           default-scheduler                            Successfully assigned my-workspace/neoload-web-1-p9lbt to rdopenshift02
 14s         17s          2         neoload-web-1-p9lbt.160417a9517d59fe    Pod                     spec.containers{neoload-web-frontend}   Normal    BackOff             kubelet, rdopenshift02                       Back-off pulling image "neotys/neoload-web-frontend:7.0.0"
