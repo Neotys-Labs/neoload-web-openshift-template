@@ -2,7 +2,7 @@
 
 # NeoLoad Web OpenShift template
 
-This repository contains assets and documentation that will help you to deploy NeoLoad Web on an OpenShift cluster.
+_This repository has been deprecated. Please contact your sales representative if you want to deploy NeoLoad Web on OpenShift._
 
 ## NeoLoad Web Overview
 
